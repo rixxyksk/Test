@@ -1,0 +1,71 @@
+[ {
+  "question" : "Вывод текста \"Hello World\" в консоль",
+  "parts" : [ "public class HelloWorld{}", "Scanner sc = new Scanner(\"Hello World\");", "System.out.println(\"Hello World\");", "public static void main(\"Hello World\")" ],
+  "otvet" : 2,
+  "level" : 1
+}, {
+  "question" : "Не является целочисленным типом",
+  "parts" : [ "byte", "short", "long", "double" ],
+  "otvet" : 3,
+  "level" : 2
+}, {
+  "question" : "Корректное объявление переменной",
+  "parts" : [ "int 0;", "int i;", "int = 0;", "i = (int) 0;" ],
+  "otvet" : 1,
+  "level" : 2
+}, {
+  "question" : "Выражение, которое будет истинным при хотя бы одном истинном условии",
+  "parts" : [ "a|b", "a&b", "a^b", "a~b" ],
+  "otvet" : 0,
+  "level" : 4
+}, {
+  "question" : "Что такое Java?",
+  "parts" : [ "Операционная система", "Язык программирования", "Текстовый редактор", "Вирус" ],
+  "otvet" : 1,
+  "level" : 1
+}, {
+  "question" : "Какой тип данных используется для хранения целых чисел?",
+  "parts" : [ "String", "float", "int", "char" ],
+  "otvet" : 2,
+  "level" : 2
+}, {
+  "question" : "Что выведет этот код? System.out.println(10 % 3);",
+  "parts" : [ "1", "3", "0", "3.333" ],
+  "otvet" : 0,
+  "level" : 2
+}, {
+  "question" : "Какой оператор используется для сравнения двух значений на равенство?",
+  "parts" : [ "=", "==", "!=", "<>" ],
+  "otvet" : 1,
+  "level" : 4
+}, {
+  "question" : "Что такое массив в Java?",
+  "parts" : [ "Строка текста", "Коллекция элементов одного типа", "Условный оператор", "Метод" ],
+  "otvet" : 1,
+  "level" : 8
+}, {
+  "question" : "Как объявить массив целых чисел?",
+  "parts" : [ "int array[];", "array int[];", "int[] array;", "Оба варианта а) и в) верны " ],
+  "otvet" : 3,
+  "level" : 8
+}, {
+  "question" : "Какой пакет импортируется по умолчанию в каждом Java-классе?\n",
+  "parts" : [ "java.util ", "java.lang ", "java.io ", "Никакой " ],
+  "otvet" : 1,
+  "level" : 3
+}, {
+  "question" : "Что такое JVM?\n",
+  "parts" : [ "Java Virtual Machine - виртуальная машина Java", "Java Variable Method - метод переменной Java", "Java Visual Module - визуальный модуль Java", "Java Version Manager - менеджер версий Java" ],
+  "otvet" : 0,
+  "level" : 1
+}, {
+  "question" : "Какой тип данных используется для хранения одного символа?\n",
+  "parts" : [ "String", "char", "Character ", "letter" ],
+  "otvet" : 1,
+  "level" : 2
+}, {
+  "question" : "Какой оператор используется для логического \"И\"?",
+  "parts" : [ "&", "|", "&&", "||" ],
+  "otvet" : 2,
+  "level" : 4
+}]

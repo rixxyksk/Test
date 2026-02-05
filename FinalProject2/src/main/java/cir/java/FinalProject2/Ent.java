@@ -1,0 +1,337 @@
+package cir.java.FinalProject2;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
+import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import javax.swing.JToolBar;
+import java.awt.BorderLayout;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JSeparator;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.Color;
+
+public class Ent extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private File questions;
+	private JToolBar toolBar;
+	private JLabel lblNewLabel;
+	private JPanel panel;
+	private JPanel panel2;
+	private JTextArea textArea;
+	private JTextField textField1;
+	private JTextField textField2;
+	private JTextField textField3;
+	private JTextField textField4;
+	private JButton btnNewButton2;
+	private JTextField textField5;
+	private JSeparator separator;
+	private JSeparator separator2;
+	private JTextField textField6;
+	private JLabel lblQuestion;
+	private JLabel lblAnswer1;
+	private JLabel lblAnswer2;
+	private JLabel lblAnswer3;
+	private JLabel lblAnswer4;
+	private JLabel lblAnswer5;
+	private JLabel lblAnswer6;
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Ent frame = new Ent();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Ent() {
+		setBackground(new Color(131, 228, 114));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 728, 521);
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(218, 247, 208));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+
+		JButton btnNewButton = new JButton("Выберите файл");
+		btnNewButton.setBackground(new Color(170, 236, 142));
+		btnNewButton.addActionListener(new ActionListener() {
+
+
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser("Z:\\Java\\2025-2026\\2 IT JA Ч\\Кучукова Полина");
+				//fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+				FileNameExtensionFilter pngFilter = new FileNameExtensionFilter("txt files (*.txt)", "txt");
+				fileChooser.addChoosableFileFilter(pngFilter);
+				fileChooser.setFileFilter(pngFilter);			 
+
+				int result = fileChooser.showOpenDialog(btnNewButton);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					questions = fileChooser.getSelectedFile();
+					lblNewLabel.setText(questions.getName());
+					btnNewButton2.setEnabled(true);
+				}
+			}
+		});
+		contentPane.setLayout(new BorderLayout(0, 0));
+
+		toolBar = new JToolBar();
+		toolBar.setBackground(new Color(177, 236, 157));
+		contentPane.add(toolBar, BorderLayout.NORTH);
+
+		lblNewLabel = new JLabel("");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		toolBar.add(lblNewLabel);
+		btnNewButton.setHorizontalAlignment(SwingConstants.LEADING);
+		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		toolBar.add(btnNewButton);
+
+		panel = new JPanel();
+		panel.setBackground(new Color(218, 247, 208));
+
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.rowWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		gbl_panel.columnWidths = new int[]{322, 322};
+		//gbl_panel.rowHeights = new int[]{78, 78, 78, 78, 78, 0};
+		//gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		//gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panel.setLayout(gbl_panel);
+		contentPane.add(panel, BorderLayout.CENTER);		
+
+		lblQuestion = new JLabel("Введите вопрос");
+		lblQuestion.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		GridBagConstraints gbc_lblQuestion = new GridBagConstraints();
+		gbc_lblQuestion.gridwidth = 2;
+		gbc_lblQuestion.insets = new Insets(0, 0, 5, 2);
+		gbc_lblQuestion.gridx = 0;
+		gbc_lblQuestion.gridy = 0;
+		panel.add(lblQuestion, gbc_lblQuestion);
+
+
+		textArea = new JTextArea();
+		textArea.setBackground(new Color(231, 250, 222));
+		textArea.setLineWrap(true);
+		textArea.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		textArea.setColumns(1);
+		GridBagConstraints gbc_textArea = new GridBagConstraints();
+		gbc_textArea.gridwidth = 2;
+		gbc_textArea.fill = GridBagConstraints.BOTH;
+		gbc_textArea.insets = new Insets(0, 0, 5, 2);
+		gbc_textArea.gridx = 0;
+		gbc_textArea.gridy = 1;
+		panel.add(textArea, gbc_textArea);
+
+		separator = new JSeparator();
+		GridBagConstraints gbc_separator = new GridBagConstraints();
+		gbc_separator.fill = GridBagConstraints.BOTH;
+		gbc_separator.insets = new Insets(0, 0, 5, 2);
+		gbc_separator.gridwidth = 2;
+		gbc_separator.gridx = 0;
+		gbc_separator.gridy = 2;
+		panel.add(separator, gbc_separator);
+
+		lblAnswer1 = new JLabel("Первый вариант ответа");
+		lblAnswer1.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		GridBagConstraints gbc_lblAnswer1 = new GridBagConstraints();
+		gbc_lblAnswer1.anchor = GridBagConstraints.WEST;
+		gbc_lblAnswer1.insets = new Insets(0, 0, 5, 5);
+		gbc_lblAnswer1.gridx = 0;
+		gbc_lblAnswer1.gridy = 3;
+		panel.add(lblAnswer1, gbc_lblAnswer1);
+
+		textField1 = new JTextField();
+		textField1.setBackground(new Color(231, 250, 222));
+		textField1.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		GridBagConstraints gbc_textField1 = new GridBagConstraints();
+		gbc_textField1.fill = GridBagConstraints.BOTH;
+		gbc_textField1.insets = new Insets(0, 0, 5, 2);
+		gbc_textField1.gridx = 1;
+		gbc_textField1.gridy = 3;
+		panel.add(textField1, gbc_textField1);
+		textField1.setColumns(10);
+
+		lblAnswer2 = new JLabel("Второй вариант ответа");
+		lblAnswer2.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		GridBagConstraints gbc_lblAnswer2 = new GridBagConstraints();
+		gbc_lblAnswer2.anchor = GridBagConstraints.WEST;
+		gbc_lblAnswer2.insets = new Insets(0, 0, 5, 5);
+		gbc_lblAnswer2.gridx = 0;
+		gbc_lblAnswer2.gridy = 4;
+		panel.add(lblAnswer2, gbc_lblAnswer2);
+
+		textField2 = new JTextField();
+		textField2.setBackground(new Color(231, 250, 222));
+		textField2.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		GridBagConstraints gbc_textField2 = new GridBagConstraints();
+		gbc_textField2.fill = GridBagConstraints.BOTH;
+		gbc_textField2.insets = new Insets(0, 0, 5, 2);
+		gbc_textField2.gridx = 1;
+		gbc_textField2.gridy = 4;
+		panel.add(textField2, gbc_textField2);
+		textField2.setColumns(10);
+
+		lblAnswer3 = new JLabel("Третий вариант ответа");
+		lblAnswer3.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		GridBagConstraints gbc_lblAnswer3 = new GridBagConstraints();
+		gbc_lblAnswer3.anchor = GridBagConstraints.WEST;
+		gbc_lblAnswer3.insets = new Insets(0, 0, 5, 5);
+		gbc_lblAnswer3.gridx = 0;
+		gbc_lblAnswer3.gridy = 5;
+		panel.add(lblAnswer3, gbc_lblAnswer3);
+
+		textField3 = new JTextField();
+		textField3.setBackground(new Color(231, 250, 222));
+		textField3.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		GridBagConstraints gbc_textField3 = new GridBagConstraints();
+		gbc_textField3.fill = GridBagConstraints.BOTH;
+		gbc_textField3.insets = new Insets(0, 0, 5, 2);
+		gbc_textField3.gridx = 1;
+		gbc_textField3.gridy = 5;
+		panel.add(textField3, gbc_textField3);
+		textField3.setColumns(10);
+
+		lblAnswer4 = new JLabel("Четвертый вариант ответа");
+		lblAnswer4.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		GridBagConstraints gbc_lblAnswer4 = new GridBagConstraints();
+		gbc_lblAnswer4.insets = new Insets(0, 0, 5, 5);
+		gbc_lblAnswer4.anchor = GridBagConstraints.WEST;
+		gbc_lblAnswer4.gridx = 0;
+		gbc_lblAnswer4.gridy = 6;
+		panel.add(lblAnswer4, gbc_lblAnswer4);
+
+		textField4 = new JTextField();
+		textField4.setBackground(new Color(231, 250, 222));
+		textField4.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		GridBagConstraints gbc_textField4 = new GridBagConstraints();
+		gbc_textField4.fill = GridBagConstraints.BOTH;
+		gbc_textField4.insets = new Insets(0, 0, 5, 2);
+		gbc_textField4.gridx = 1;
+		gbc_textField4.gridy = 6;
+		panel.add(textField4, gbc_textField4);
+		textField4.setColumns(10);
+
+		separator2 = new JSeparator();
+		GridBagConstraints gbc_separator2 = new GridBagConstraints();
+		gbc_separator2.gridwidth = 2;
+		gbc_separator2.fill = GridBagConstraints.BOTH;
+		gbc_separator2.insets = new Insets(0, 0, 5, 2);
+		gbc_separator2.gridx = 0;
+		gbc_separator2.gridy = 7;
+		panel.add(separator2, gbc_separator2);
+
+		lblAnswer5 = new JLabel("Выберите уровень");
+		lblAnswer5.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		GridBagConstraints gbc_lblAnswer5 = new GridBagConstraints();
+		gbc_lblAnswer5.insets = new Insets(0, 0, 5, 5);
+		gbc_lblAnswer5.anchor = GridBagConstraints.WEST;
+		gbc_lblAnswer5.gridx = 0;
+		gbc_lblAnswer5.gridy = 8;
+		panel.add(lblAnswer5, gbc_lblAnswer5);
+
+		textField5 = new JTextField();
+		textField5.setBackground(new Color(231, 250, 222));
+		textField5.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		GridBagConstraints gbc_textField5 = new GridBagConstraints();
+		gbc_textField5.fill = GridBagConstraints.BOTH;
+		gbc_textField5.insets = new Insets(0, 0, 5, 2);
+		gbc_textField5.gridx = 1;
+		gbc_textField5.gridy = 8;
+		panel.add(textField5, gbc_textField5);
+		textField5.setColumns(10);
+
+		lblAnswer6 = new JLabel("Какой ответ верный");
+		lblAnswer6.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		GridBagConstraints gbc_lblAnswer6 = new GridBagConstraints();
+		gbc_lblAnswer6.insets = new Insets(0, 0, 0, 5);
+		gbc_lblAnswer6.anchor = GridBagConstraints.WEST;
+		gbc_lblAnswer6.gridx = 0;
+		gbc_lblAnswer6.gridy = 9;
+		panel.add(lblAnswer6, gbc_lblAnswer6);
+
+		textField6 = new JTextField();
+		textField6.setBackground(new Color(231, 250, 222));
+		textField6.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		GridBagConstraints gbc_textField6 = new GridBagConstraints();
+		gbc_textField6.fill = GridBagConstraints.BOTH;
+		gbc_textField6.insets = new Insets(0, 0, 2, 2);
+		gbc_textField6.gridx = 1;
+		gbc_textField6.gridy = 9;
+		panel.add(textField6, gbc_textField6);
+		textField6.setColumns(10);
+
+		panel2 = new JPanel();
+		panel2.setBackground(new Color(213, 241, 205));
+		contentPane.add(panel2, BorderLayout.SOUTH);
+
+		btnNewButton2 = new JButton("Добавить");
+		btnNewButton2.setBackground(new Color(170, 236, 142));
+		btnNewButton2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					ObjectMapper mapper = new ObjectMapper();
+					mapper.enable(SerializationFeature.INDENT_OUTPUT);
+					if (!questions.exists()) {
+						System.out.println("Файла нет");
+					}
+					List<Answer> questionsList = mapper.readValue(questions, new TypeReference<List<Answer>>() {});
+					int otvet = Integer.parseInt(textField6.getText());
+					Answer answer = new Answer(textArea.getText(),
+							Arrays.asList(
+									new Part(textField1.getText(),otvet==0),
+									new Part(textField2.getText(),otvet==1),
+									new Part(textField3.getText(),otvet==2),
+									new Part(textField4.getText(),otvet==3)
+									),otvet,Integer.parseInt(textField5.getText()));
+					questionsList.add(answer);
+					String json = mapper.writeValueAsString(questionsList);
+					PrintWriter writer = new PrintWriter(questions, "UTF-8");
+					writer.println(json);
+					writer.close();
+				}
+				catch(IOException e1) {
+					System.err.println("Ошибка"+e1.getMessage());
+				}
+			}
+		});
+		btnNewButton2.setEnabled(false);
+		btnNewButton2.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		panel2.add(btnNewButton2);
+	}
+
+}

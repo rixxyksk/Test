@@ -1,0 +1,52 @@
+[ {
+  "question" : "Вывод текста \"Hello World\" в консоль",
+  "parts" : [ {
+    "string" : "public class HelloWorld{}",
+    "correct" : false
+  }, {
+    "string" : "Scanner sc = new Scanner(\"Hello World\");",
+    "correct" : false
+  }, {
+    "string" : "System.out.println(\"Hello World\");",
+    "correct" : true
+  }, {
+    "string" : "public static void main(\"Hello World\")",
+    "correct" : false
+  } ],
+  "otvet" : 2,
+  "level" : 1
+}, {
+  "question" : "Не является целочисленным типом",
+  "parts" : [ {
+    "string" : "byte",
+    "correct" : false
+  }, {
+    "string" : "short",
+    "correct" : false
+  }, {
+    "string" : "long",
+    "correct" : false
+  }, {
+    "string" : "double",
+    "correct" : true
+  } ],
+  "otvet" : 3,
+  "level" : 2
+}, {
+  "question" : "Корректное объявление переменной",
+  "parts" : [ {
+    "string" : "int 0;",
+    "correct" : false
+  }, {
+    "string" : "int i;",
+    "correct" : true
+  }, {
+    "string" : "int = 0;",
+    "correct" : false
+  }, {
+    "string" : "i = (int) 0;",
+    "correct" : false
+  } ],
+  "otvet" : 1,
+  "level" : 2
+} ]
