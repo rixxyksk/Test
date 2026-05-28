@@ -1,0 +1,782 @@
+package cir.java.MavenTest;
+import java.awt.EventQueue;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.awt.Font;
+import java.util.Collections;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.Component;
+import java.awt.GridLayout;
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.SwingConstants;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.awt.event.ActionEvent;
+import javax.swing.JTextArea;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Random;
+
+import javax.swing.SwingUtilities;
+
+public class Wind extends JFrame {
+
+	class QuestionRdBt extends JRadioButton {
+		private static final long serialVersionUID = 1L;
+		private int num;
+		String st;
+
+		public QuestionRdBt(int num,String st) {
+			super(st);
+			this.num = num;			
+		}		
+
+		public int getNum() {
+			return num;
+		}
+		public void setNum(int num) {
+			this.num = num;
+		}
+	}
+
+	private static class ColorPair {
+		int firstButton;
+		int secondButton;
+		String color;
+
+		ColorPair(int first, int second, String color) {
+			this.firstButton = first;
+			this.secondButton = second;
+			this.color = color;
+		}
+	}
+	private class BeginListener implements ActionListener {
+
+
+
+
+		public void actionPerformed(ActionEvent e) {			
+			//блок проверки предыдущего вопроса
+			if (currentQuestion>-1) {
+				switch(currentType){             
+				case 0: 
+					Answer answ = questionList.get(position);
+					if (answ.parts.get(currentAnswer).correct) {
+						count++;
+					}
+					position++;
+					break;
+				case 1:
+					// Проверяем правильность составленного предложения
+					ComposeSentence cs = questionList1.get(position1);
+					// Собираем ответ пользователя из panelCompose
+					String userAnswer = new String();
+					for (Component comp : panelCompose.getComponents()) {
+						if (comp instanceof JButton) {
+							JButton btn = (JButton) comp;
+							if (userAnswer.length() > 0) {
+								userAnswer+=(" ");
+							}
+							userAnswer+=(btn.getText());
+						}
+					}
+					// Сравниваем с правильным ответом
+					String correctAnswer = String.join(" ", cs.parts);
+					if (userAnswer.toString().equals(correctAnswer)) {
+						count++;
+					}
+					position1++;
+					System.out.println("position1 = "+position1);
+					break;
+				case 2:
+					checkAnswers();
+					position2+=5;
+					break;
+
+				}
+			}
+			currentQuestion++;
+			lblNewLabel_1.setText("Вопросов пройдено: "+currentQuestion+", Правильных ответов: "+count);
+			if (currentQuestion == 0) {
+				btnNewButton.setText("Далее");
+			}			
+			else if (currentQuestion==sumQuestions -1) {
+				btnNewButton.setText("Завершить");
+			}
+
+
+			//выбор типа вопросов
+			currentType = (int) (Math.random()*x);
+			isShown = false;
+
+			//отображение текущ. вопроса
+			if (currentQuestion < sumQuestions) {
+				while (!isShown) {
+					switch(currentType){             
+					case 0: 
+						if (position < questionList.size()) {
+							showQuestion(e,position, currentType);	
+							isShown = true;
+						} else {
+							currentType = 1;
+						}
+						break;
+					case 1: 
+						if (position1 < questionList1.size()) {
+							showQuestion(e,position1,currentType); //!!
+							isShown = true;
+							ComposeSentence cs = questionList1.get(position1);
+						}
+						else {
+							currentType = 2;
+						}
+						break;
+					case 2: 
+						if (position2 < questionList2.size()) {
+							showQuestion(e,position2,currentType); //!!
+							isShown = true;
+							//Pair p = pairs;
+						}
+						else {
+							currentType = 0;
+						}
+						break;	
+					}
+				}
+			}
+			else {
+				panel2.removeAll();
+				panel2.validate();
+				panel2.add(lblNewLabel);
+				lblNewLabel.setText("Вы молодцы!");
+				lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				lblNewLabel.setVisible(true);
+				panel2.repaint();
+				lblNewLabel_1.setText("Вопросов пройдено: "+currentQuestion+", Правильных ответов: "+count);
+				btnNewButton.setVisible(false);
+
+
+			}
+
+
+		}
+	}
+
+	private JButton ButtonEight;
+	private JButton ButtonFive;
+	private JButton ButtonFour;
+	private JButton ButtonNine;
+	private JButton ButtonOne;
+	private JButton ButtonSeven;
+	private JButton ButtonSix;
+	private JButton ButtonTen;
+	private JButton ButtonThree;
+	private JButton ButtonTwo;
+	List<JButton> buttonsL = Arrays.asList(ButtonOne,ButtonTwo,ButtonThree,ButtonFour,ButtonFive);
+	List<JButton> buttonsR = Arrays.asList(ButtonSix,ButtonSeven,ButtonEight,ButtonNine,ButtonTen);
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JButton btnNewButton;
+	JPanel panel1 = new JPanel();
+	JPanel panel2 = new JPanel();
+	JPanel panel3 = new JPanel();
+	List<Answer> questionList = loadQuestionsFromJson();
+	int count = 0;
+	int currentQuestion = -1; // у пользователя
+	int currentAnswer = 0;
+	private JLabel lblNewLabel_1;
+	private JLabel lblNewLabel;
+	int position = 0;
+	int position1 = 0;
+	int position2 = 0;
+	JPanel panelQuestion;
+	JPanel panelCompose;
+	JPanel panelParts;
+	private int currentType;
+	boolean isShown;
+	private List<ColorPair> selectedPairs = new ArrayList<>();
+	private int pairCounter = 0;
+	private int currentFirstButton = -1;
+	private String currentColor = "";
+	private List<Integer> usedButtons = new ArrayList<>();
+	private final String[] colors = {"cyan", "orange", "blue", "pink", "yellow"};
+	private final String[] colorNames = {"Бирюзовый", "Оранжевый", "Синий", "Розовый", "Желтый"};
+	
+// поменять на чтение из файла
+	private final List<int[]> validCombinations = List.of(
+			new int[]{1, 6}, 
+			new int[]{2, 7},  
+			new int[]{3, 8},
+			new int[]{4, 9},  
+			new int[]{5, 10}   
+			);
+
+	List<ComposeSentence> questionList1 = loadQuestionsFromJson1();
+	List<String> randomParts = new ArrayList<>();
+	List<String> answerParts = new ArrayList<>();
+	List<Pair> questionList2 = loadQuestionsFromJson2();
+
+	int sumQuestions = questionList.size()+questionList1.size()+questionList2.size()/5+(questionList2.size()%5>0?1:0);
+	int x = 3;
+	private int qShow;
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Wind frame = new Wind();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	private List<Pair> loadQuestionsFromJson2() {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			File file = new File("pairs.txt");
+			if (!file.exists()) {
+				System.out.println("Файла нет");
+				return null;
+			}
+			List<Pair> pairs = mapper.readValue(file, new TypeReference<List<Pair>>() {});
+			Collections.shuffle(pairs);
+			for (Pair p: pairs) {
+
+			}
+
+			return pairs;
+		}
+		catch(IOException e) {
+			System.err.println("Ошибка"+e.getMessage());
+			return null;
+		}
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Wind() {
+		setBackground(new Color(196, 250, 180));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 616, 534);
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(183, 240, 170));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(new BorderLayout(0, 0));
+
+		JPanel panel1 = new JPanel();
+		contentPane.add(panel1, BorderLayout.NORTH);
+		panel1.setBackground(new Color(218, 247, 208));
+
+		lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
+		lblNewLabel_1.setBackground(new Color(170, 236, 142));
+		panel1.add(lblNewLabel_1);
+
+		contentPane.add(panel2, BorderLayout.CENTER);
+		panel2.setLayout(new GridLayout(0, 1, 0, 0));
+		panel2.setBackground(new Color(218, 247, 208));
+
+		JPanel panel2 = new JPanel();
+		lblNewLabel = new JLabel("");
+		lblNewLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
+		panel2.add(lblNewLabel);
+
+		JPanel panel3 = new JPanel();
+		contentPane.add(panel3, BorderLayout.SOUTH);
+		panel3.setBackground(new Color(218, 247, 208));
+
+		btnNewButton = new JButton("Начать");
+
+		btnNewButton.addActionListener(new BeginListener());
+		btnNewButton.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
+		btnNewButton.setBackground(new Color(170, 236, 142));
+		panel3.add(btnNewButton);
+		this.getRootPane().setDefaultButton(btnNewButton);
+
+
+	}
+
+
+	private List<Answer> loadQuestionsFromJson() {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			File file = new File("questions.txt");
+			if (!file.exists()) {
+				System.out.println("Файла нет");
+				return null;
+			}
+			List<Answer> questions = mapper.readValue(file, new TypeReference<List<Answer>>() {});
+			Collections.shuffle(questions);
+			for (Answer q: questions) {
+
+			}
+
+			return questions;
+
+		}
+		catch(IOException e) {
+			System.err.println("Ошибка"+e.getMessage());
+			return null;
+		}
+	}
+
+
+	private List<ComposeSentence> loadQuestionsFromJson1() {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			File file = new File("ComposeSentence.txt");
+			if (!file.exists()) {
+				System.out.println("Файла нет");
+				return null;
+			}
+			List<ComposeSentence> cs = mapper.readValue(file, new TypeReference<List<ComposeSentence>>() {});
+			Collections.shuffle(cs);
+			for (ComposeSentence s: cs) {
+				System.out.println(s.question);
+			}
+
+			return cs;
+
+		}
+		catch(IOException e) {
+			System.err.println("Ошибка"+e.getMessage());
+			return null;
+		}
+	}
+	private JButton getButtonById(int id) {
+		if (id <= 5) {
+			return buttonsL.get(id-1);
+		}
+		else {
+			return buttonsR.get(id-6);
+		}
+	}
+	private void enableAllButtons() {
+		for (JButton btn: buttonsL) {
+			btn.setEnabled(true);
+		}
+		for (JButton btn: buttonsR) {
+			btn.setEnabled(true);
+		}
+	}
+
+
+	private void handleButtonSelection(int buttonId, int pairsLeft) {
+		// Максимально можно выбрать 5 пар (10 кнопок / 2 = 5 пар)
+		
+		
+		System.out.println("pairCounter = "+ pairCounter);
+		System.out.println("currentColor = "+ currentColor);
+		System.out.println("buttonId= "+ buttonId);
+		System.out.println("currentFirstButton = "+currentFirstButton+" before");
+		System.out.println("usedButtons= "+usedButtons);
+		System.out.println("selectedPairs= "+selectedPairs);
+		System.out.println();
+		System.out.println();
+		
+		
+		if (pairCounter >= pairsLeft) return;
+
+		if (usedButtons.contains(buttonId)) {
+			return;
+		}
+
+		currentColor = colors[pairCounter];
+
+		if (currentFirstButton == -1) {
+			// Первая кнопка в паре
+			currentFirstButton = buttonId;
+			highlightButton(buttonId, currentColor, true);
+			updateButtonAvailability();
+		} else {
+			// Вторая кнопка в паре
+			if (currentFirstButton == buttonId) return;
+
+			if (usedButtons.contains(buttonId)) {
+				return;
+			}
+
+			// Проверяем, что вторая кнопка из противоположной группы
+			boolean isValidPair = false;
+			if (currentFirstButton <= 5 && buttonId >= 6) {
+				isValidPair = true; // Первая 1-5, вторая 6-10
+			} else if (currentFirstButton >= 6 && buttonId <= 5) {
+				isValidPair = true; // Первая 6-10, вторая 1-5
+			}
+
+			if (!isValidPair) {
+				// Неправильная комбинация, игнорируем
+				return;
+			}
+
+			selectedPairs.add(new ColorPair(currentFirstButton, buttonId, currentColor));
+
+			usedButtons.add(currentFirstButton);
+			usedButtons.add(buttonId);
+
+			highlightButton(currentFirstButton, currentColor, false);
+			highlightButton(buttonId, currentColor, false);
+
+			pairCounter++;
+			currentFirstButton = -1;
+
+			updateButtonAvailability();
+
+
+			if (pairCounter == pairsLeft) {
+				btnNewButton.setEnabled(true);
+
+			}
+		}
+	}
+
+	private void cancelLastAction() {
+
+
+		if (currentFirstButton != -1) {
+			currentFirstButton = -1;
+		} else if (!selectedPairs.isEmpty()) {
+			ColorPair lastPair = selectedPairs.remove(selectedPairs.size() - 1);
+
+			usedButtons.remove(Integer.valueOf(lastPair.firstButton));
+			usedButtons.remove(Integer.valueOf(lastPair.secondButton));
+
+			pairCounter--;
+
+			if (pairCounter >= 0) {
+				currentColor = colors[pairCounter];
+			}
+		}
+
+		updateButtonAvailability();
+
+
+	}
+
+
+	private void highlightButton(int buttonId, String color, boolean isFirst) {
+		Color color1 = null;
+		JButton button = getButtonById(buttonId);
+		if (button == null) return;
+
+		String style = String.format(
+				"-fx-background-color: %s; -fx-text-fill: white; -fx-background-radius: 15; -fx-border-radius: 15;",
+				color
+				);
+
+		if (isFirst) {
+			style += " -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);";
+		}
+		switch (color) {
+		case "blue": 
+			color1 = Color.blue;
+			break;
+		case "pink": 
+			color1 = Color.pink;
+			break;
+		case "yellow": 
+			color1 = Color.yellow;
+			break;
+		case "orange": 
+			color1 = Color.orange;
+			break;
+		case "cyan": 
+			color1 = Color.cyan;
+			break;
+		}
+		
+		button.setBackground(color1);
+
+
+
+	}
+
+
+
+
+
+
+
+	private void highlightButtonAsCorrect(int buttonId) {
+		JButton button = getButtonById(buttonId);
+	}
+
+	private void highlightButtonAsWrong(int buttonId) {
+		JButton button = getButtonById(buttonId);
+		
+	}
+
+	private void resetSelectionState() {
+		selectedPairs.clear();
+		usedButtons.clear();
+		pairCounter = 0;
+		currentFirstButton = -1;
+		currentColor = "";
+		//enableAllButtons();
+
+
+	}
+// ПЕРЕДЕЛАТЬ
+	private boolean isCombinationValid(int firstButton, int secondButton) {
+		for (int[] combination : validCombinations) {
+			int btn1 = combination[0];
+			int btn2 = combination[1];
+
+			if ((firstButton == btn1 && secondButton == btn2) ||
+					(firstButton == btn2 && secondButton == btn1)) {
+				return true;
+			}
+		}
+		return false;
+	}	
+
+	private void checkAnswers() {
+		int correctPairs = 0;
+		for (ColorPair selectedPair : selectedPairs) {
+			boolean isCorrect = isCombinationValid(selectedPair.firstButton, selectedPair.secondButton);
+
+			if (isCorrect) {
+				correctPairs++;
+				System.out.println("correctPairs "+correctPairs);
+				highlightButtonAsCorrect(selectedPair.firstButton);
+				highlightButtonAsCorrect(selectedPair.secondButton);
+			} else {
+				highlightButtonAsWrong(selectedPair.firstButton);
+				highlightButtonAsWrong(selectedPair.secondButton);
+			}
+		}
+		
+		if (correctPairs == qShow) {
+			count++;
+		}
+		
+	}
+
+	private void updateButtonAvailability() {
+		enableAllButtons();
+
+		// Блокируем уже использованные кнопки
+		for (int buttonId : usedButtons) {
+			JButton button = getButtonById(buttonId);
+			if (button != null) {
+				button.setEnabled(false);
+			}
+		}
+
+		System.out.println("currentFirstButton= "+currentFirstButton);		
+		
+		if (currentFirstButton != -1) {
+			// Если выбрана первая кнопка, блокируем остальные кнопки из той же группы
+			if (currentFirstButton <= 5) {
+				// Выбрана кнопка 1-5, блокируем остальные из 1-5
+				for (int i = 1; i <= 5; i++) {
+					if (i != currentFirstButton && !usedButtons.contains(i)) {
+						JButton button = getButtonById(i);
+						if (button != null) {
+							button.setEnabled(false);
+							System.out.println(button.getText());
+						}
+					}
+				}
+			} else {
+				// Выбрана кнопка 6-10, блокируем остальные из 6-10
+				for (int i = 6; i <= 10; i++) {
+					if (i != currentFirstButton && !usedButtons.contains(i)) {
+						JButton button = getButtonById(i);
+						if (button != null) {
+							button.setEnabled(false);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public void showQuestion(ActionEvent e, int number, int currentType) {
+		panel2.removeAll();
+		panel2.validate();
+		panel2.repaint();
+		btnNewButton.setEnabled(false);
+		switch(currentType){             
+		case 0: 
+			panel2.setLayout(new GridLayout(0, 1, 0, 0));
+			Answer answ = questionList.get(number);
+			Collections.shuffle(answ.parts);
+
+			JLabel lblNewLabel = new JLabel(answ.question);
+			lblNewLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+			lblNewLabel.setBackground(new Color(237, 251, 234));
+			panel2.add(lblNewLabel);
+			ButtonGroup group = new ButtonGroup();
+			for (int i=0; i < answ.parts.size(); i++  ) {
+				QuestionRdBt rdbtnNewRadioButton = new QuestionRdBt(i,answ.parts.get(i).string);
+				rdbtnNewRadioButton.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
+				rdbtnNewRadioButton.setBackground(new Color(231, 250, 222));
+				rdbtnNewRadioButton.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						QuestionRdBt bt = (QuestionRdBt) e.getSource();
+						currentAnswer = bt.getNum();
+						System.out.println("currentAnswer = "+currentAnswer);
+						btnNewButton.setEnabled(true);
+
+					}});
+				group.add(rdbtnNewRadioButton);
+				panel2.add(rdbtnNewRadioButton);
+			}
+
+			panel2.validate();
+			break;
+		case 1:
+			panel2.setLayout(new GridLayout(0, 1, 0, 0));
+			randomParts.clear();
+			Random random = new Random();
+			JButton b = (JButton) e.getSource(); // кнопка
+
+			panelQuestion = new JPanel();
+			panelQuestion.setBackground(new Color(218, 247, 208));
+			panelQuestion.setLayout(new GridLayout(0, 1, 0, 0));
+			panel2.add(panelQuestion);
+
+			panelCompose =  new JPanel();
+			panelCompose.setBackground(new Color(218, 247, 208));
+			panel2.add(panelCompose);
+
+			panelParts = new JPanel();
+			panelParts.setBackground(new Color(218, 247, 208));
+			panel2.add(panelParts);
+
+			ComposeSentence q1 = questionList1.get(number);
+			JLabel lblNewLabel1 = new JLabel(q1.question);
+			lblNewLabel1.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+			lblNewLabel1.setBackground(new Color(237, 251, 234));
+			panelQuestion.add(lblNewLabel1);
+			int partsLeft = q1.parts.size();
+			while (partsLeft > 0) {
+				int i = random.nextInt(q1.parts.size());
+				String part = q1.parts.get(i);
+				if (!randomParts.contains(part)) {
+					randomParts.add(part);
+					JButton btn = new JButton(part);
+					btn.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
+					panelParts.add(btn);
+					btn.addActionListener(new ActionListener() {
+
+						public void actionPerformed(ActionEvent e) {
+							JButton btn = (JButton) e.getSource();
+							Wind frame = (Wind) SwingUtilities.getWindowAncestor(b);
+							JPanel panel = (JPanel) btn.getParent();
+							if (panel.equals(frame.panelParts)) {
+								frame.panelParts.remove(btn);
+								frame.panelCompose.add(btn);
+							} else if (panel.equals(frame.panelCompose)) {
+								frame.panelCompose.remove(btn);
+								frame.panelParts.add(btn);
+
+							}
+							frame.panelCompose.validate();
+							frame.panelCompose.repaint();
+							frame.panelParts.validate();
+							frame.panelParts.repaint();
+
+							if (frame.panelParts.getComponentCount() == 0) {
+								btnNewButton.setEnabled(true);
+							}
+
+						}
+
+					});
+					partsLeft--;
+				}
+
+				panel2.validate();
+				panelQuestion.validate();
+				panelParts.validate();
+
+			}
+			break;
+		case 2:
+			resetSelectionState();
+			panel2.setLayout(new GridLayout(0, 2, 0, 0));
+			
+			int questionsLeft = questionList2.size()-position2;
+			System.out.println("position2 = "+position2);
+			if (questionsLeft<5) {
+				qShow = questionsLeft;
+			}
+			else {
+				qShow=5;
+			}
+			for (int n = 0; n < qShow; n++){
+				JButton btnL = new JButton();
+				btnL.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
+				btnL.setBackground(new Color(170, 236, 142));
+				int mL = n+1;
+				btnL.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						handleButtonSelection(mL,qShow);
+					}});
+				
+				JButton btnR = new JButton();
+				btnR.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
+				btnR.setBackground(new Color(170, 236, 142));
+				int mR = n+6;
+				btnR.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						handleButtonSelection(mR,qShow);
+					}});
+			
+				btnL.setText(questionList2.get(n+position2).getString1());
+				btnR.setText(questionList2.get(n+position2).getString2());
+				
+				buttonsL.set(n, btnL);
+				buttonsR.set(n, btnR);
+			
+			}
+			List<JButton> btL = new ArrayList<>();
+			List<JButton> btR = new ArrayList<>();
+			for (int n = 0; n < qShow; n++) {
+				btL.add(buttonsL.get(n));
+				btR.add(buttonsR.get(n));
+			}
+
+
+
+			
+			Collections.shuffle(btL);
+			Collections.shuffle(btR);
+			for (int n = 0; n < qShow; n++) {
+				JButton btnL = btL.get(n);
+				JButton btnR = btR.get(n);
+				panel2.add(btnL);
+				panel2.add(btnR);
+			}
+			break;
+			
+
+		}
+	}
+
+}
